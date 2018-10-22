@@ -9,9 +9,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// Article - Our struct for all articles
 type Article struct {
-	Id      int    `json:"Id"`
+	ID      int    `json:"ID"`
 	Title   string `json:"Title"`
 	Desc    string `json:"desc"`
 	Content string `json:"content"`
@@ -31,6 +30,7 @@ func returnAllArticles(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println("Endpoint Hit: returnAllArticles")
 
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(articles)
 }
 
@@ -40,12 +40,17 @@ func returnSingleArticle(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Key: "+key)
 }
 
+func testPost(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Test POST Endpoint worked!")
+}
+
 func handleRequests() {
-	myRouter := mux.NewRouter().StrictSlash(true)
-	myRouter.HandleFunc("/", homePage)
-	myRouter.HandleFunc("/all", returnAllArticles)
-	myRouter.HandleFunc("/article/{id}", returnSingleArticle)
-	log.Fatal(http.ListenAndServe(":8081", myRouter))
+	myRouter := mux.NewRouter()
+	myRouter.HandleFunc("/api/", homePage)
+	myRouter.HandleFunc("/api/articles", returnAllArticles).Methods("GET")
+	myRouter.HandleFunc("/api/articles", testPost).Methods("POST")
+	myRouter.HandleFunc("/api/articles/{id}", returnSingleArticle).Methods("GET")
+	log.Fatal(http.ListenAndServe(":5000", myRouter))
 }
 
 func main() {
