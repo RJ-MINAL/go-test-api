@@ -9,6 +9,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// Article holds the api information
 type Article struct {
 	ID      int    `json:"ID"`
 	Title   string `json:"Title"`
@@ -16,6 +17,7 @@ type Article struct {
 	Content string `json:"content"`
 }
 
+// Articles is an splice of Articles
 type Articles []Article
 
 func homePage(w http.ResponseWriter, r *http.Request) {
